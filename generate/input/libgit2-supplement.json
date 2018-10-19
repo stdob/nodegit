@@ -86,6 +86,64 @@
   },
   "new" : {
     "functions": {
+      "git_branch_remote_name": {
+        "type": "function",
+        "file": "branch.h",
+        "args": [
+          {
+            "name": "out",
+            "type": "git_buf *"
+          },
+          {
+            "name": "repo",
+            "type": "git_repository *"
+          },
+          {
+            "name": "canonical_branch_name",
+            "type": "const char *"
+          }
+        ],
+        "isAsync": true,
+        "return": {
+          "type": "int",
+          "isErrorCode": true
+        },
+        "group": "branch"
+      },
+      "git_commit_extract_signature": {
+        "args": [
+          {
+            "name": "signature",
+            "type": "git_buf"
+          },
+          {
+            "name": "signed_data",
+            "type": "git_buf"
+          },
+          {
+            "name": "repo",
+            "type": "git_repository *"
+          },
+          {
+            "name": "commit_id",
+            "type": "git_oid *"
+          },
+          {
+            "name": "field",
+            "type": "char *"
+          }
+        ],
+        "type": "function",
+        "isManual": true,
+        "cFile": "generate/templates/manual/commit/extract_signature.cc",
+        "isAsync": true,
+        "isPrototypeMethod": false,
+        "group": "commit",
+        "return": {
+          "type": "int",
+          "isErrorCode": true
+        }
+      },
       "git_patch_convenient_from_diff": {
         "args": [
           {
@@ -271,6 +329,16 @@
           "git_annotated_commit_from_revspec",
           "git_annotated_commit_id",
           "git_annotated_commit_lookup"
+        ]
+      ],
+      [
+        "filter_list",
+        [
+          "git_filter_list_apply_to_blob",
+          "git_filter_list_apply_to_data",
+          "git_filter_list_apply_to_file",
+          "git_filter_list_free",
+          "git_filter_list_load"
         ]
       ],
       [
@@ -521,6 +589,10 @@
             {
               "name": "download_tags",
               "type": "git_remote_autotag_option_t"
+            },
+            {
+              "name": "custom_headers",
+              "type": "git_strarray"
             }
           ],
           "used": {
@@ -627,9 +699,18 @@
               "name": "transfer_progress"
             },
             {
+              "type": "git_push_transfer_progress",
+              "name": "push_transfer_progress",
+              "isCallback": true
+            },
+            {
               "type": "git_transport_cb",
               "name": "transport",
               "ignore": true
+            },
+            {
+              "type": "git_push_update_reference_cb",
+              "name": "push_update_reference"
             },
             {
               "type": "void *",
@@ -752,6 +833,61 @@
             ]
           }
         }
+      ],
+      [
+        "git_worktree_add_options",
+        {
+          "type": "struct",
+          "fields": [
+            {
+              "type": "unsigned int",
+              "name": "version"
+            },
+            {
+              "type": "int",
+              "name": "lock"
+            }
+          ]
+        }
+      ],
+      [
+        "git_worktree_prune_t",
+        {
+          "type": "enum",
+          "fields": [
+            {
+              "type": "unsigned int",
+              "name": "git_worktree_prune_valid",
+              "value": 1
+            },
+            {
+              "type": "unsigned int",
+              "name": "git_worktree_prune_locked",
+              "value": 2
+            },
+            {
+              "type": "unsigned int",
+              "name": "git_worktree_prune_working_tree",
+              "value": 4
+            }
+          ]
+        }
+      ],
+      [
+        "git_worktree_prune_options",
+        {
+          "type": "struct",
+          "fields": [
+            {
+              "type": "unsigned int",
+              "name": "version"
+            },
+            {
+              "type": "uint32_t",
+              "name": "flags"
+            }
+          ]
+        }
       ]
     ]
   },
@@ -768,13 +904,6 @@
     },
     "filter": {
       "functions": [
-        "git_filter_list_apply_to_blob",
-        "git_filter_list_apply_to_data",
-        "git_filter_list_apply_to_file",
-        "git_filter_list_contains",
-        "git_filter_list_free",
-        "git_filter_list_length",
-        "git_filter_list_load",
         "git_filter_list_new",
         "git_filter_list_push",
         "git_filter_list_stream_blob",
@@ -795,6 +924,11 @@
         "git_merge_head_from_id",
         "git_merge_head_from_ref",
         "git_merge_head_id"
+      ]
+    },
+    "message": {
+      "functions": [
+        "git_message_trailer_array_free"
       ]
     },
     "odb": {
@@ -836,6 +970,9 @@
     }
   },
   "groups": {
+    "branch": [
+      "git_branch_remote_name"
+    ],
     "stash": [
       "git_stash_save"
     ]

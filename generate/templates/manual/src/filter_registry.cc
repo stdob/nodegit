@@ -28,7 +28,7 @@ void GitFilterRegistry::InitializeComponent(v8::Local<v8::Object> target) {
 
   Nan::SetMethod(object, "register", GitFilterRegister);
   Nan::SetMethod(object, "unregister", GitFilterUnregister);
-  
+
   Nan::Set(target, Nan::New<String>("FilterRegistry").ToLocalChecked(), object);
   GitFilterRegistry::persistentHandle.Reset(object);
 }
@@ -56,14 +56,14 @@ NAN_METHOD(GitFilterRegistry::GitFilterRegister) {
 
   baton->filter = Nan::ObjectWrap::Unwrap<GitFilter>(info[1]->ToObject())->GetValue();
   String::Utf8Value name(info[0]->ToString());
-  
+
   baton->filter_name = (char *)malloc(name.length() + 1);
   memcpy((void *)baton->filter_name, *name, name.length());
   memset((void *)(((char *)baton->filter_name) + name.length()), 0, 1);
 
   baton->error_code = GIT_OK;
-  baton->filter_priority = (int)info[2]->ToNumber()->Value();
-  
+  baton->filter_priority = Nan::To<int>(info[2]).FromJust();
+
   Nan::New(GitFilterRegistry::persistentHandle)->Set(info[0]->ToString(), info[1]->ToObject());
 
   Nan::Callback *callback = new Nan::Callback(Local<Function>::Cast(info[3]));
@@ -97,8 +97,8 @@ void GitFilterRegistry::RegisterWorker::HandleOKCallback() {
       Nan::Null(),
       result
     };
-    callback->Call(2, argv);
-  } 
+    callback->Call(2, argv, async_resource);
+  }
   else if (baton->error) {
     v8::Local<v8::Object> err;
     if (baton->error->message) {
@@ -107,10 +107,11 @@ void GitFilterRegistry::RegisterWorker::HandleOKCallback() {
       err = Nan::Error("Method register has thrown an error.")->ToObject();
     }
     err->Set(Nan::New("errno").ToLocalChecked(), Nan::New(baton->error_code));
+    err->Set(Nan::New("errorFunction").ToLocalChecked(), Nan::New("FilterRegistry.register").ToLocalChecked());
     v8::Local<v8::Value> argv[1] = {
       err
     };
-    callback->Call(1, argv);
+    callback->Call(1, argv, async_resource);
     if (baton->error->message)
       free((void *)baton->error->message);
     free((void *)baton->error);
@@ -118,13 +119,14 @@ void GitFilterRegistry::RegisterWorker::HandleOKCallback() {
   else if (baton->error_code < 0) {
     v8::Local<v8::Object> err = Nan::Error("Method register has thrown an error.")->ToObject();
     err->Set(Nan::New("errno").ToLocalChecked(), Nan::New(baton->error_code));
+    err->Set(Nan::New("errorFunction").ToLocalChecked(), Nan::New("FilterRegistry.register").ToLocalChecked());
     v8::Local<v8::Value> argv[1] = {
       err
     };
-    callback->Call(1, argv);
+    callback->Call(1, argv, async_resource);
   }
   else {
-    callback->Call(0, NULL);
+    callback->Call(0, NULL, async_resource);
   }
   delete baton;
   return;
@@ -181,8 +183,8 @@ void GitFilterRegistry::UnregisterWorker::HandleOKCallback() {
       Nan::Null(),
       result
     };
-    callback->Call(2, argv);
-  } 
+    callback->Call(2, argv, async_resource);
+  }
   else if (baton->error) {
     v8::Local<v8::Object> err;
     if (baton->error->message) {
@@ -191,10 +193,11 @@ void GitFilterRegistry::UnregisterWorker::HandleOKCallback() {
       err = Nan::Error("Method register has thrown an error.")->ToObject();
     }
     err->Set(Nan::New("errno").ToLocalChecked(), Nan::New(baton->error_code));
+    err->Set(Nan::New("errorFunction").ToLocalChecked(), Nan::New("FilterRegistry.unregister").ToLocalChecked());
     v8::Local<v8::Value> argv[1] = {
       err
     };
-    callback->Call(1, argv);
+    callback->Call(1, argv, async_resource);
     if (baton->error->message)
       free((void *)baton->error->message);
     free((void *)baton->error);
@@ -202,13 +205,14 @@ void GitFilterRegistry::UnregisterWorker::HandleOKCallback() {
   else if (baton->error_code < 0) {
     v8::Local<v8::Object> err = Nan::Error("Method unregister has thrown an error.")->ToObject();
     err->Set(Nan::New("errno").ToLocalChecked(), Nan::New(baton->error_code));
+    err->Set(Nan::New("errorFunction").ToLocalChecked(), Nan::New("FilterRegistry.unregister").ToLocalChecked());
     v8::Local<v8::Value> argv[1] = {
       err
     };
-    callback->Call(1, argv);
+    callback->Call(1, argv, async_resource);
   }
   else {
-    callback->Call(0, NULL);
+    callback->Call(0, NULL, async_resource);
   }
   delete baton;
   return;

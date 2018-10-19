@@ -95,14 +95,21 @@
             "value_out": {
               "isReturn": true
             }
+          },
+          "return": {
+            "isErrorCode": true
           }
         },
         "git_attr_get_many": {
+          "isAsync": true,
           "args": {
             "values_out": {
               "isReturn": true,
               "jsClassName": "Array"
             }
+          },
+          "return": {
+            "isErrorCode": true
           }
         }
       }
@@ -139,6 +146,9 @@
               "cppClassName": "Buffer",
               "jsClassName": "Buffer"
             }
+          },
+          "return": {
+            "isErrorCode": true
           }
         },
         "git_blob_create_fromworkdir": {
@@ -258,7 +268,7 @@
           "args": {
             "out": {
               "isReturn": true,
-              "cppClassName": "GitBuf", 
+              "cppClassName": "GitBuf",
               "jsClassName": "Buffer",
               "cType": "git_buf *",
               "shouldAlloc": true
@@ -475,6 +485,9 @@
             "update_ref": {
               "isOptional": true
             }
+          },
+          "return": {
+            "isErrorCode": true
           }
         },
         "git_commit_author": {
@@ -511,7 +524,27 @@
           }
         },
         "git_commit_create_buffer": {
-          "ignore": true
+          "args": {
+            "out": {
+              "isReturn": true,
+              "cppClassName": "GitBuf",
+              "jsClassName": "Buffer",
+              "shouldAlloc": true
+            },
+            "message_encoding": {
+              "isOptional": true
+            },
+            "parents": {
+              "cType": "const git_commit **",
+              "cppClassName": "Array",
+              "jsClassName": "Array",
+              "arrayElementCppClassName": "GitCommit"
+            }
+          },
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_commit_create_from_callback": {
           "ignore": true
@@ -523,7 +556,7 @@
           "ignore": true
         },
         "git_commit_extract_signature": {
-          "ignore": true
+          "isAsync": true
         },
         "git_commit_id": {
           "return": {
@@ -576,13 +609,40 @@
           "ignore": true
         },
         "git_config_find_global": {
-          "ignore": true
+          "isAsync": true,
+          "args": {
+            "out": {
+              "isReturn": true,
+              "shouldAlloc": true
+            }
+          },
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_config_find_system": {
-          "ignore": true
+          "isAsync": true,
+          "args": {
+            "out": {
+              "isReturn": true,
+              "shouldAlloc": true
+            }
+          },
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_config_find_xdg": {
-          "ignore": true
+          "isAsync": true,
+          "args": {
+            "out": {
+              "isReturn": true,
+              "shouldAlloc": true
+            }
+          },
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_config_foreach": {
           "ignore": true
@@ -627,7 +687,16 @@
           }
         },
         "git_config_get_path": {
-          "ignore": true
+          "isAsync": true,
+          "args": {
+            "out": {
+              "isReturn": true,
+              "shouldAlloc": true
+            }
+          },
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_config_iterator_free": {
           "ignore": true
@@ -666,7 +735,15 @@
           "ignore": true
         },
         "git_config_open_ondisk": {
-          "ignore": true
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          },
+          "args": {
+            "out": {
+              "isReturn": true
+            }
+          }
         },
         "git_config_parse_bool": {
           "ignore": true
@@ -1008,19 +1085,76 @@
       "hasConstructor": true,
       "functions": {
         "git_filter_list_apply_to_blob": {
-          "ignore": true
+          "async": true,
+          "return": {
+            "isErrorCode": true
+          },
+          "args": {
+            "out": {
+              "isReturn": true,
+              "shouldAlloc": true
+            },
+            "filters": {
+              "isSelf": true
+            }
+          }
         },
         "git_filter_list_apply_to_data": {
-          "ignore": true
+          "async": true,
+          "return": {
+            "isErrorCode": true
+          },
+          "args": {
+            "out": {
+              "isReturn": true,
+              "shouldAlloc": true
+            },
+            "filters": {
+              "isSelf": true
+            }
+          }
         },
         "git_filter_list_apply_to_file": {
-          "ignore": true
+          "async": true,
+          "return": {
+            "isErrorCode": true
+          },
+          "args": {
+            "out": {
+              "isReturn": true,
+              "shouldAlloc": true
+            },
+            "filters": {
+              "isSelf": true
+            }
+          }
         },
         "git_filter_list_free": {
-          "ignore": true
+          "async": true,
+          "args": {
+            "filters": {
+              "isSelf": true
+            }
+          }
         },
         "git_filter_list_load": {
-          "ignore": true
+          "async": true,
+          "return": {
+            "isErrorCode": true
+          },
+          "args": {
+            "filters": {
+              "isReturn": true,
+              "cType": "git_filter_list **"
+            },
+            "repo": {
+              "cType": "git_repository *"
+            },
+            "blob": {
+              "isOptional": true,
+              "cType": "git_blob *"
+            }
+          }
         },
         "git_filter_list_push": {
           "ignore": true
@@ -1102,7 +1236,10 @@
               "isReturn": true
             }
           },
-          "isAsync": true
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
         }
       }
     },
@@ -1213,7 +1350,28 @@
           "jsFunctionName": "entryCount"
         },
         "git_index_find": {
-          "ignore": true
+          "isAsync": true,
+          "args": {
+            "at_pos": {
+              "isReturn": true,
+              "shouldAlloc": true
+            }
+          },
+          "return": {
+            "isErrorCode": true
+          }
+        },
+        "git_index_find_prefix": {
+          "isAsync": true,
+          "args": {
+            "at_pos": {
+              "isReturn": true,
+              "shouldAlloc": true
+            }
+          },
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_index_free": {
           "ignore": true
@@ -1353,6 +1511,9 @@
     },
     "mempack": {
       "functions": {
+        "git_mempack_dump": {
+          "ignore": true
+        },
         "git_mempack_new": {
           "ignore": true
         },
@@ -1414,6 +1575,16 @@
             }
           }
         },
+        "git_merge_trees": {
+          "args": {
+            "ancestor_tree": {
+              "isOptional": true
+            },
+            "opts": {
+              "isOptional": true
+            }
+          }
+        },
         "git_merge_file": {
           "ignore": true
         },
@@ -1434,6 +1605,9 @@
     "message": {
       "functions": {
         "git_message_prettify": {
+          "ignore": true
+        },
+        "git_message_trailers": {
           "ignore": true
         }
       }
@@ -1692,6 +1866,9 @@
         "git_patch_free": {
           "ignore": true
         },
+        "git_patch_from_blob_and_buffer": {
+          "ignore": true
+        },
         "git_patch_from_buffers": {
           "ignore": true
         },
@@ -1748,6 +1925,9 @@
       }
     },
     "pathspec": {
+      "dependencies": [
+        "../include/str_array_converter.h"
+      ],
       "functions": {
         "git_pathspec_match_list_free": {
           "ignore": true
@@ -1905,7 +2085,10 @@
               "key": "strings"
             }
           },
-          "isAsync": true
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_reference_next": {
           "ignore": true
@@ -1980,6 +2163,7 @@
     },
     "remote": {
       "dependencies": [
+        "../include/str_array_converter.h",
         "../include/remote_head.h"
       ],
       "cType": "git_remote",
@@ -2058,7 +2242,10 @@
               "key": "strings"
             }
           },
-          "isAsync": true
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_remote_get_push_refspecs": {
           "args": {
@@ -2071,7 +2258,10 @@
               "key": "strings"
             }
           },
-          "isAsync": true
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_remote_get_refspec": {
           "return": {
@@ -2132,12 +2322,6 @@
           "ignore": true
         },
         "push_negotiation": {
-          "ignore": true
-        },
-        "push_transfer_progress": {
-          "ignore": true
-        },
-        "push_update_reference": {
           "ignore": true
         },
         "sideband_progress": {
@@ -2264,6 +2448,9 @@
       }
     },
     "reset": {
+      "dependencies": [
+        "../include/str_array_converter.h"
+      ],
       "functions": {
         "git_reset": {
           "args": {
@@ -2407,10 +2594,10 @@
             "status_flags": {
               "isReturn": true,
               "shouldAlloc": true
-            },
-            "return": {
-              "isErrorCode": true
             }
+          },
+          "return": {
+            "isErrorCode": true
           }
         },
         "git_status_foreach": {
@@ -2597,6 +2784,9 @@
       }
     },
     "tag": {
+      "dependencies": [
+        "../include/str_array_converter.h"
+      ],
       "selfFreeing": true,
       "functions": {
         "git_tag_foreach": {
@@ -2654,7 +2844,26 @@
               "key": "strings"
             }
           },
-          "isAsync": true
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
+        },
+        "git_tag_list_match": {
+          "args": {
+            "tag_names": {
+              "isReturn": true,
+              "shouldAlloc": true,
+              "cppClassName": "Array",
+              "jsClassName": "Array",
+              "size": "count",
+              "key": "strings"
+            }
+          },
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
         },
         "git_tag_tagger": {
           "return": {
@@ -2662,10 +2871,14 @@
           }
         },
         "git_tag_target": {
+          "isAsync": true,
           "args": {
             "target_out": {
               "isReturn": true
             }
+          },
+          "return": {
+            "isErrorCode": true
           }
         },
         "git_tag_target_id": {
@@ -2678,6 +2891,17 @@
             "isErrorCode": true
           },
           "isAsync": true
+        },
+        "git_tag_peel": {
+          "args": {
+            "tag_target_out": {
+              "isReturn": true
+            }
+          },
+          "isAsync": true,
+          "return": {
+            "isErrorCode": true
+          }
         }
       }
     },
@@ -2685,8 +2909,17 @@
       "dupFunction": "git_time_dup",
       "dependencies": [
         "git2/sys/time.h"
-      ]
-
+      ],
+      "fields": {
+        "sign": {
+          "ignore": true
+        }
+      },
+      "functions": {
+        "git_time_sign": {
+          "ignore": true
+        }
+      }
     },
     "trace": {
       "functions": {
@@ -2779,10 +3012,14 @@
           }
         },
         "git_treebuilder_write": {
+          "isAsync": true,
           "args": {
             "id": {
               "isReturn": true
             }
+          },
+          "return": {
+            "isErrorCode": true
           }
         },
         "git_treebuilder_write_with_buffer": {
@@ -2817,6 +3054,22 @@
             "isErrorCode": true
           },
           "isAsync": true
+        }
+      }
+    },
+    "worktree": {
+      "selfFreeing": true,
+      "cType": "git_worktree",
+      "freeFunctionName": "git_worktree_free",
+      "functions": {
+        "git_worktree_free": {
+          "ignore": true
+        },
+        "git_worktree_add_init_options": {
+          "ignore": true
+        },
+        "git_worktree_prune_init_options": {
+          "ignore": true
         }
       }
     },

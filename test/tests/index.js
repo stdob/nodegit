@@ -1,18 +1,14 @@
 var assert = require("assert");
 var path = require("path");
 var local = path.join.bind(path, __dirname);
-var promisify = require("promisify-node");
-var fse = promisify(require("fs-extra"));
-
-var writeFile = promisify(function(filename, data, callback) {
-  return require("fs").writeFile(filename, data, {}, callback);
-});
+var fse = require("fs-extra");
 
 describe("Index", function() {
   var IndexUtils = require("../utils/index_setup");
   var RepoUtils = require("../utils/repository_setup");
   var NodeGit = require("../../");
   var Repository = NodeGit.Repository;
+  var ErrorCodes = NodeGit.Error.CODE;
 
   var reposPath = local("../repos/workdir");
 
@@ -51,9 +47,9 @@ describe("Index", function() {
     var addCallbacksCount = 0;
 
     return Promise.all(fileNames.map(function(fileName) {
-      return writeFile(
+      return fse.writeFile(
         path.join(repo.workdir(), fileName),
-        fileContent[fileName]);
+        fileContent[fileName], {});
     }))
     .then(function() {
       return index.addAll(undefined, undefined, function() {
@@ -96,9 +92,9 @@ describe("Index", function() {
     var removeCallbacksCount = 0;
 
     return Promise.all(fileNames.map(function(fileName) {
-      return writeFile(
+      return fse.writeFile(
         path.join(repo.workdir(), fileName),
-        fileContent[fileName]);
+        fileContent[fileName], {});
     }))
     .then(function() {
       return index.addAll();
@@ -146,9 +142,9 @@ describe("Index", function() {
     var updateCallbacksCount = 0;
 
     return Promise.all(fileNames.map(function(fileName) {
-      return writeFile(
+      return fse.writeFile(
         path.join(repo.workdir(), fileName),
-        fileContent[fileName]);
+        fileContent[fileName], {});
     }))
     .then(function() {
       return index.addAll();
@@ -357,6 +353,69 @@ describe("Index", function() {
       })
       .then(function(index) {
         assert(index.hasConflicts());
+      });
+  });
+
+  it("can find the specified file in the index", function() {
+    var test = this;
+
+    return test.index.find("src/wrapper.cc")
+      .then(function(position) {
+        assert.notEqual(position, null);
+      });
+  });
+
+  it("cannot find the specified file in the index", function() {
+    var test = this;
+
+    return test.index.find("src/thisisfake.cc")
+      .then(function(position) {
+        assert.fail("the item should not be found");
+      })
+      .catch(function(error) {
+        assert.strictEqual(error.errno, ErrorCodes.ENOTFOUND);
+      });
+  });
+
+  it("cannot find the directory in the index", function() {
+    var test = this;
+
+    return test.index.find("src")
+      .then(function(position) {
+        assert.fail("the item should not be found");
+      })
+      .catch(function(error) {
+        assert.strictEqual(error.errno, ErrorCodes.ENOTFOUND);
+      });
+  });
+
+  it("can find the specified prefix in the index", function() {
+    var test = this;
+
+    return test.index.findPrefix("src/")
+      .then(function(position) {
+        assert.notEqual(position, null);
+      });
+  });
+
+  it("cannot find the specified prefix in the index", function() {
+    var test = this;
+
+    return test.index.find("testing123/")
+      .then(function(position) {
+        assert.fail("the item should not be found");
+      })
+      .catch(function(error) {
+        assert.strictEqual(error.errno, ErrorCodes.ENOTFOUND);
+      });
+  });
+
+  it("can find the prefix when a file shares the name", function() {
+    var test = this;
+
+    return test.index.find("LICENSE")
+      .then(function(position) {
+        assert.notEqual(position, null);
       });
   });
 });

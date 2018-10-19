@@ -84,8 +84,8 @@ var Helpers = {
       });
   },
 
-  isCallbackFunction: function(cType) {
-    return callbackTypePattern.test(cType);
+  isCallbackFunction: function(cType, isCallback) {
+    return isCallback === true || callbackTypePattern.test(cType);
   },
 
   isPayloadFor: function(cbField, payloadName) {
@@ -228,7 +228,7 @@ var Helpers = {
     field.jsClassName = utils.titleCase(Helpers.cTypeToJsName(field.type));
     field.ownedByThis = true;
 
-    if (Helpers.isCallbackFunction(field.cType)) {
+    if (Helpers.isCallbackFunction(field.cType, field.isCallback)) {
       Helpers.processCallback(field);
 
       var argOverrides = fieldOverrides.args || {};
@@ -315,6 +315,7 @@ var Helpers = {
 
     fnDef.cppFunctionName = Helpers.cTypeToCppName(key, "git_" + typeDef.typeName);
     fnDef.jsFunctionName = Helpers.cTypeToJsName(key, "git_" + typeDef.typeName);
+    fnDef.jsClassName = typeDef.jsClassName;
 
     if (fnDef.cppFunctionName == typeDef.cppClassName) {
       fnDef.cppFunctionName = fnDef.cppFunctionName.replace("Git", "");

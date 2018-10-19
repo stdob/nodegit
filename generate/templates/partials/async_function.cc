@@ -52,7 +52,7 @@ NAN_METHOD({{ cppClassName }}::{{ cppFunctionName }}) {
         {%endif%}
       {%endif%}
     {%elsif arg.shouldAlloc %}
-      baton->{{arg.name}} = ({{ arg.cType }})malloc(sizeof({{ arg.cType|replace '*' '' }}));  
+      baton->{{arg.name}} = ({{ arg.cType }})malloc(sizeof({{ arg.cType|replace '*' '' }}));
       {%if arg.cppClassName == "GitBuf" %}
         baton->{{arg.name}}->ptr = NULL;
         baton->{{arg.name}}->size = baton->{{arg.name}}->asize = 0;
@@ -151,7 +151,7 @@ void {{ cppClassName }}::{{ cppFunctionName }}Worker::HandleOKCallback() {
       Nan::Null(),
       result
     };
-    callback->Call(2, argv);
+    callback->Call(2, argv, async_resource);
   } else {
     if (baton->error) {
       v8::Local<v8::Object> err;
@@ -161,10 +161,11 @@ void {{ cppClassName }}::{{ cppFunctionName }}Worker::HandleOKCallback() {
         err = Nan::Error("Method {{ jsFunctionName }} has thrown an error.")->ToObject();
       }
       err->Set(Nan::New("errno").ToLocalChecked(), Nan::New(baton->error_code));
+      err->Set(Nan::New("errorFunction").ToLocalChecked(), Nan::New("{{ jsClassName }}.{{ jsFunctionName }}").ToLocalChecked());
       v8::Local<v8::Value> argv[1] = {
         err
       };
-      callback->Call(1, argv);
+      callback->Call(1, argv, async_resource);
       if (baton->error->message)
         free((void *)baton->error->message);
       free((void *)baton->error);
@@ -204,7 +205,7 @@ void {{ cppClassName }}::{{ cppFunctionName }}Worker::HandleOKCallback() {
           v8::Local<v8::Value> argv[1] = {
             checkValue->ToObject()
           };
-          callback->Call(1, argv);
+          callback->Call(1, argv, async_resource);
           callbackFired = true;
           break;
         }
@@ -222,13 +223,14 @@ void {{ cppClassName }}::{{ cppFunctionName }}Worker::HandleOKCallback() {
       if (!callbackFired) {
         v8::Local<v8::Object> err = Nan::Error("Method {{ jsFunctionName }} has thrown an error.")->ToObject();
         err->Set(Nan::New("errno").ToLocalChecked(), Nan::New(baton->error_code));
+        err->Set(Nan::New("errorFunction").ToLocalChecked(), Nan::New("{{ jsClassName }}.{{ jsFunctionName }}").ToLocalChecked());
         v8::Local<v8::Value> argv[1] = {
           err
         };
-        callback->Call(1, argv);
+        callback->Call(1, argv, async_resource);
       }
     } else {
-      callback->Call(0, NULL);
+      callback->Call(0, NULL, async_resource);
     }
 
     {%each args|argsInfo as arg %}

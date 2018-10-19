@@ -1,8 +1,7 @@
 var assert = require("assert");
 var path = require("path");
 var local = path.join.bind(path, __dirname);
-var promisify = require("promisify-node");
-var fse = promisify(require("fs-extra"));
+var fse = require("fs-extra");
 
 describe("Tree", function() {
   var NodeGit = require("../../");
@@ -44,8 +43,7 @@ describe("Tree", function() {
     var repo = this.repository;
     var file1 = "test.txt";
     var file2 = "foo/bar.txt";
-    // index.addByPath doesn't like \s so normalize only for the expected paths
-    var expectedPaths = [file1, path.normalize(file2)];
+    var expectedPaths = [file1, file2];
     var progressEntries = [];
     var endEntries;
 

@@ -1,6 +1,235 @@
 # Change Log
 
-## <a name="v0-20-2" href="#v0-20-2">v0.20.2</a> [(2017-08-16)](https://github.com/nodegit/nodegit/releases/tag/v0.20.2)
+## <a name="v0-23-0-alpha.1" href="#v0-23-0-alpha.1">v0.23.0-alpha.1</a> [(2018-10-01)](https://github.com/nodegit/nodegit/releases/tag/v0.23.0-alpha.1)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.22.2...v0.23.0-alpha.1)
+
+#### Summary of changes
+- Added Node 10 support.
+- We no longer compile OpenSSL. Instead, we prefer the OpenSSL shipped with Node. In electron builds, we prefer the system openssl on linux, and we get prebuilt static libs from Conan.
+- Cleaned up some compiler warnings
+- Our http_parser dependency is now a submodule.
+- Updated some dependencies in npm to get rid of security vulnerabilities and warnings.
+- Exposed transfer progress callback for pushing.
+
+#### Merged PRs into NodeGit
+- [warn about node v10 incompatibility in readme #1534](https://github.com/nodegit/nodegit/pull/1534)
+- [Define error codes to fix compiler warnings about unused variables #1486](https://github.com/nodegit/nodegit/pull/1486)
+- [Include http_parser via submodule #1551](https://github.com/nodegit/nodegit/pull/1551)
+- [Update dependencies to get rid of security vulnerabilities #1547](https://github.com/nodegit/nodegit/pull/1547)
+- [add github issue template #1548](https://github.com/nodegit/nodegit/pull/1548)
+- [Enable git_push_transfer_progress - Help wanted #1500](https://github.com/nodegit/nodegit/pull/1500)
+- [Fixed createBranch API params #1552](https://github.com/nodegit/nodegit/pull/1552)
+- [Use curl-config to find curl #1555](https://github.com/nodegit/nodegit/pull/1555)
+- [Update readme #1554](https://github.com/nodegit/nodegit/pull/1554)
+- [Node 10 support #1545](https://github.com/nodegit/nodegit/pull/1545)
+- [Update dependencies #1519](https://github.com/nodegit/nodegit/pull/1519)
+- [Run submodule updates in sequence rather than parallel #1558](https://github.com/nodegit/nodegit/pull/1558)
+- [Fix Electron builds on win32 #1560](https://github.com/nodegit/nodegit/pull/1560)
+
+
+## <a name="v0-22-2" href="#v0-22-2">v0.22.2</a> [(2018-07-10)](https://github.com/nodegit/nodegit/releases/tag/v0.22.2)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.22.1...v0.22.2)
+
+#### Summary of changes
+- Bumped libgit2 to 0.27.3 to incorporate security patch. Details can be found here https://github.com/libgit2/libgit2/releases/tag/v0.27.3
+- Also includes changes made in 0.27.2. Details can be found here https://github.com/libgit2/libgit2/releases/tag/v0.27.2
+- Ensure optional params are respected as optional in `NodeGit.Merge.trees`
+
+#### Merged PRs into NodeGit
+- [Fix argument handling in Git.Merge.trees #1507](https://github.com/nodegit/nodegit/pull/1507)
+
+#### Included non-merged libgit2 PRs:
+ - [Parallelize checkout_create_the_new for ntfs perf gains #4205](https://github.com/libgit2/libgit2/pull/4205)
+ - [negotiate always fails via libcurl #4126](https://github.com/libgit2/libgit2/pull/4126)
+
+#### Included merged libgit2 PRs:
+- [Bugfix release v0.27.2 #4632](https://github.com/libgit2/libgit2/pull/4632)
+- [Release v0.27.3 #4717](https://github.com/libgit2/libgit2/pull/4717)
+
+
+## <a name="v0-22-1" href="#v0-22-1">v0.22.1</a> [(2018-04-09)](https://github.com/nodegit/nodegit/releases/tag/v0.22.1)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.22.0...v0.22.1)
+
+#### Summary of changes
+Bumped libgit2 to 0.27.1 to address security flaw with submodule name validation (CVE-2018-11235, reported by Etienne Stalmans).
+Details can be found here https://github.com/libgit2/libgit2/releases/tag/v0.27.1
+
+
+## <a name="v0-22-0" href="#v0-22-0">v0.22.0</a> [(2018-04-09)](https://github.com/nodegit/nodegit/releases/tag/v0.22.0)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.21.2...v0.22.0)
+
+#### Summary of changes
+- Expose [Tag.listMatch](https://libgit2.github.com/libgit2/#v0.26.3/group/tag/git_tag_list_match)
+- Expose [Repo.prototype.createCommitBuffer](https://libgit2.github.com/libgit2/#v0.26.3/group/commit/git_commit_create_buffer)
+- Bump Libgt2 to 0.27.0. For more information about what was in this release. [Check upstream](https://github.com/libgit2/libgit2/releases/tag/v0.27.0).
+- Errors are now properly thrown from
+  - `Attr.prototype.get`
+  - `Blob.createFrombuffer`
+  - `Blob.createFromworkdir`
+  - `Reference.list`
+  - `Remote.prototype.getFetchRefspecs`
+  - `Remote.prototype.getPushRefspecs`
+  - `Status.file`
+- WorkTree is now exposed
+  - Static methods
+    - `add`
+    - `list`
+    - `lookup`
+    - `openFromRepository`
+  - Instance methods
+    - `isLocked`
+    - `isPrunable`
+    - `lock`
+    - `prune`
+    - `unlock`
+    - `validate`
+- **BREAKING** Functions that are now async
+  - `Attr.prototype.getMany`
+  - `Tag.prototype.target`
+  - `Treebuilder.prototype.Write`
+- **BREAKING** Diffs generated from `Diff.treeToIndex` and `Diff.treeToWorkdirWithIndex` conditionally support `Diff.OPTION.IGNORE_CASE`. Only on repositories where the index is case insensitive will the flag be set on the output diff. The flag itself is ignored when passed to `DiffOptions`.
+
+#### Merged PRs into NodeGit
+- [Add JavaScript Tag.listMatch function for git_tag_list_match #1470](https://github.com/nodegit/nodegit/pull/1470)
+- [Expose error code in Status.file #1468](https://github.com/nodegit/nodegit/pull/1468)
+- [Travis documentation deploy fixes #1466](https://github.com/nodegit/nodegit/pull/1466)
+- [Bump to libgit2 v0.27.0 #1477](https://github.com/nodegit/nodegit/pull/1477)
+- [Add repo.createCommitBuffer #1481](https://github.com/nodegit/nodegit/pull/1481)
+
+#### Included non-merged libgit2 PRs:
+ - [Parallelize checkout_create_the_new for ntfs perf gains #4205](https://github.com/libgit2/libgit2/pull/4205)
+ - [negotiate always fails via libcurl #4126](https://github.com/libgit2/libgit2/pull/4126)
+
+
+## <a name="v0-21-2" href="#v0-21-2">v0.21.2</a> [(2018-03-19)](https://github.com/nodegit/nodegit/releases/tag/v0.21.2)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.21.1...v0.21.2)
+
+#### Summary of changes
+- Drop support for node 7
+- Fixed an issue where fast-forward rebase would throw an error unexepctedly.
+- Expose git_commit_extract_signature
+- TreeEntry.prototype.path() should always return posix style separators
+- Expose git_config_open_ondisk
+- Expose git_config_find_global
+- Expose git_config_find_system
+- Expose git_config_find_xdg
+- Expose git_config_get_path
+
+#### Merged PRs into NodeGit
+ - [Fix typo in CHANGELOG.md #1455](https://github.com/nodegit/nodegit/pull/1455)
+ - [Add two tests for Tag #1452](https://github.com/nodegit/nodegit/pull/1452)
+ - [Handle fast-forward merges properly in repository.performRebase #1457](https://github.com/nodegit/nodegit/pull/1457)
+ - [Enable git_commit_extract_signature #1458](https://github.com/nodegit/nodegit/pull/1458)
+ - [removes 'only' from test #1460](https://github.com/nodegit/nodegit/pull/1460)
+ - [Deploy documentation and make extended tests visible #1447](https://github.com/nodegit/nodegit/pull/1447)
+ - [resolves #1433 TreeEntry#path should return posix path #1434](https://github.com/nodegit/nodegit/pull/1434)
+ - [Exposed git_config_open_ondisk #1459](https://github.com/nodegit/nodegit/pull/1459)
+ - [Expose git_config functions #1463](https://github.com/nodegit/nodegit/pull/1463)
+
+
+## <a name="v0-21-1" href="#v0-21-1">v0.21.1</a> [(2018-03-05)](https://github.com/nodegit/nodegit/releases/tag/v0.21.1)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.21.0...v0.21.1)
+
+#### Summary of changes
+- Fixed an issue where having html escape characters in the path portion of an ssh url always fails when performing remote actions.
+
+#### Included non-merged libgit2 PRs:
+- [Unescape special characters in SSH repo paths #4557](https://github.com/libgit2/libgit2/pull/4557)
+
+## <a name="v0-21-0" href="#v0-21-0">v0.21.0</a> [(2018-02-26)](https://github.com/nodegit/nodegit/releases/tag/v0.21.0)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.20.3...v0.21.0)
+
+#### Summary of changes to NodeGit:
+ - [Generate default options for Revert.revert to prevent an exception #1404](https://github.com/nodegit/nodegit/pull/1404)
+ - [fix issue with re-require()'ing native modules #1354](https://github.com/nodegit/nodegit/pull/1354)
+ - [Expose JavaScript function name in a rejected promise #1393](https://github.com/nodegit/nodegit/pull/1393)
+ - [Fix compiling with clang #1344](https://github.com/nodegit/nodegit/pull/1344)
+ - [Fix typos #1415](https://github.com/nodegit/nodegit/pull/1415)
+ - [build: add NetBSD support to opensslconf.h #1374](https://github.com/nodegit/nodegit/pull/1374)
+ - [Fix example by forcing backslashes with path.posix #1346](https://github.com/nodegit/nodegit/pull/1346)
+ - [Expose the Node.js GC when running `mocha `scripts #1258](https://github.com/nodegit/nodegit/pull/1258)
+ - [Exposed filter_list; Fixed discard lines to use filters #1414](https://github.com/nodegit/nodegit/pull/1414)
+ - [Add tests for AnnotatedCommit #1325](https://github.com/nodegit/nodegit/pull/1325)
+ - [Adding docs for NodeGit #1350](https://github.com/nodegit/nodegit/pull/1350)
+ - [Fix details-for-tree-entry.js to access fields instead of calling a function #1326](https://github.com/nodegit/nodegit/pull/1326)
+ - [Add JavaScript version of `git_tag_peel()` #1269](https://github.com/nodegit/nodegit/pull/1269)
+ - [Fixed documentation error #1417](https://github.com/nodegit/nodegit/pull/1417)
+ - [Annotate Blame.file as async #1421](https://github.com/nodegit/nodegit/pull/1421)
+ - [Add two missing tests to Commit #1422](https://github.com/nodegit/nodegit/pull/1422)
+ - [CI: Update Node.js versions + some deps #1444](https://github.com/nodegit/nodegit/pull/1444)
+ - [Expose fetch_options.custom_headers #1430](https://github.com/nodegit/nodegit/pull/1430)
+
+## <a name="v0-20-3" href="#v0-20-3">v0.20.3</a> [(2017-10-18)](https://github.com/nodegit/nodegit/releases/tag/v0.20.3)
+
+[Full Changelog](https://github.com/nodegit/nodegit/compare/v0.20.2...v0.20.3)
+
+#### Summary of changes outside of libgit2 bump:
+ - [Bumped libgit to libgit-next head #1387](https://github.com/nodegit/nodegit/pull/1387)
+ - [Added a better normalizeOptions pattern for the submodule update routine #1388](https://github.com/nodegit/nodegit/pull/1388)
+  - [Updated input docs to allow for git_push_update_reference_cb to generate #1386](https://github.com/nodegit/nodegit/pull/1386)
+  - [Updated descriptors for git_index_find and git_index_find_prefix #1391](https://github.com/nodegit/nodegit/pull/1391)
+
+#### Included merged libgit2 PRs:
+ - [Fix template dir empty string #4273](https://github.com/libgit2/libgit2/pull/4273)
+ - [travis: upgrade container to Ubuntu 14.04 #4211](https://github.com/libgit2/libgit2/pull/4211)
+ - [merge: perform exact rename detection in linear time #4202](https://github.com/libgit2/libgit2/pull/4202)
+ - [merge: fix potential free of uninitialized memory #4277](https://github.com/libgit2/libgit2/pull/4277)
+ - [cmake: Permit disabling external http-parser #4278](https://github.com/libgit2/libgit2/pull/4278)
+ - [Out of tree builds #4235](https://github.com/libgit2/libgit2/pull/4235)
+ - [Convert port with htons() in p_getaddrinfo() #4280](https://github.com/libgit2/libgit2/pull/4280)
+ - [tests: config: fix missing declaration causing error #4291](https://github.com/libgit2/libgit2/pull/4291)
+ - [git_reset_*: pass parameters as const pointers #4287](https://github.com/libgit2/libgit2/pull/4287)
+ - [signature: don't leave a dangling pointer to the strings on parse failure #4306](https://github.com/libgit2/libgit2/pull/4306)
+ - [Patch ID calculation #4272](https://github.com/libgit2/libgit2/pull/4272)
+ - [Configuration file fixes with includes #4250](https://github.com/libgit2/libgit2/pull/4250)
+ - [win32: provide fast-path for retrying filesystem operations #4311](https://github.com/libgit2/libgit2/pull/4311)
+ - [Build with patched libcurl #4317](https://github.com/libgit2/libgit2/pull/4317)
+ - [tsort: remove idempotent conditional assignment #4314](https://github.com/libgit2/libgit2/pull/4314)
+ - [tests: rebase::submodule: verify initialization method calls #4320](https://github.com/libgit2/libgit2/pull/4320)
+ - [Remove unused 'sys/remote.h' header #4323](https://github.com/libgit2/libgit2/pull/4323)
+ - [patch_generate: represent buffers as void pointers #4304](https://github.com/libgit2/libgit2/pull/4304)
+ - [sha1_position: convert do-while to while #4326](https://github.com/libgit2/libgit2/pull/4326)
+ - [sha1_lookup: drop sha1_entry_pos function #4327](https://github.com/libgit2/libgit2/pull/4327)
+ - [oid: use memcmp in git_oid__hashcmp #4328](https://github.com/libgit2/libgit2/pull/4328)
+ - [Docs: Fix inline comments for git_diff_hunk #4330](https://github.com/libgit2/libgit2/pull/4330)
+ - [Split up CMakeLists.txt build instructions #4282](https://github.com/libgit2/libgit2/pull/4282)
+ - [-Werror builds for Travis #4279](https://github.com/libgit2/libgit2/pull/4279)
+ - [Submodules with bare repo #4305](https://github.com/libgit2/libgit2/pull/4305)
+ - [Fix negative ignore rules with patterns #4296](https://github.com/libgit2/libgit2/pull/4296)
+ - [README: Mention Guile-Git bindings. #4342](https://github.com/libgit2/libgit2/pull/4342)
+ - [features.h: allow building without CMake-generated feature header #4346](https://github.com/libgit2/libgit2/pull/4346)
+ - [Clear the remote_ref_name buffer in git_push_update_tips() #4344](https://github.com/libgit2/libgit2/pull/4344)
+ - [Fix AppVeyor build failures due to CRTDBG linking issue #4347](https://github.com/libgit2/libgit2/pull/4347)
+ - [diff: cleanup hash ctx in `git_diff_patchid` #4348](https://github.com/libgit2/libgit2/pull/4348)
+ - [Reproducible builds #4334](https://github.com/libgit2/libgit2/pull/4334)
+ - [Static linking for bundled deps #4339](https://github.com/libgit2/libgit2/pull/4339)
+ - [Use SOCK_CLOEXEC when creating sockets #4364](https://github.com/libgit2/libgit2/pull/4364)
+ - [Document that a commit is not a descendant of itself #4362](https://github.com/libgit2/libgit2/pull/4362)
+ - [refs: do not use peeled OID if peeling to a tag #4367](https://github.com/libgit2/libgit2/pull/4367)
+ - [remote: add typedef to normalize push_update_reference callback #4363](https://github.com/libgit2/libgit2/pull/4363)
+ - [travis: add custom apt sources #4321](https://github.com/libgit2/libgit2/pull/4321)
+ - [Fix Issue #4047 Check return codes and free objects #4370](https://github.com/libgit2/libgit2/pull/4370)
+ - [Plug some leaks in curl's proxy handling #4359](https://github.com/libgit2/libgit2/pull/4359)
+ - [Checkout typechange-only deltas #4369](https://github.com/libgit2/libgit2/pull/4369)
+ - [tests: checkout::tree: verify status entrycount changes on chmod #4371](https://github.com/libgit2/libgit2/pull/4371)
+ - [transports: smart: fix memory leak when skipping symbolic refs #4368](https://github.com/libgit2/libgit2/pull/4368)
+ - [cmake: fix linking in Xcode with object libraries only #4372](https://github.com/libgit2/libgit2/pull/4372)
+ - [cmake: use static dependencies when building static libgit2 #4356](https://github.com/libgit2/libgit2/pull/4356)
+
+#### Included non-merged libgit2 PRs:
+ - [Parallelize checkout_create_the_new for ntfs perf gains #4205](https://github.com/libgit2/libgit2/pull/4205)
+ - [negotiate always fails via libcurl #4126](https://github.com/libgit2/libgit2/pull/4126)
+
+
+
+## <a name="v0-20-2" href="#v0-20-2">v0.20.2</a> [(2017-09-13)](https://github.com/nodegit/nodegit/releases/tag/v0.20.2)
 
 [Full Changelog](https://github.com/nodegit/nodegit/compare/v0.20.0...v0.20.2)
 
@@ -20,7 +249,7 @@
  - [Add CI build config for node stable version #1337](https://github.com/nodegit/nodegit/pull/1337)
  - [removed node v4 tests #1330](https://github.com/nodegit/nodegit/pull/1330)
 
-#### Included merged libgti2 PRs:
+#### Included merged libgit2 PRs:
  - [Include fixups #4288](https://github.com/libgit2/libgit2/pull/4288)
  - [Docs: Fix inline comments for git_diff_hunk #4330](https://github.com/libgit2/libgit2/pull/4330)
  - [oid: use memcmp in git_oid__hashcmp #4328](https://github.com/libgit2/libgit2/pull/4328)
@@ -96,7 +325,7 @@
 #### Summary of changes outside of libgit2 bump:
  - You can now convert tree entries in blobs [PR #1272](https://github.com/nodegit/nodegit/pull/1272)
 
-#### Included merged libgti2 PRs:
+#### Included merged libgit2 PRs:
 
  - [fileops: fix leaking fd in `mmap_ro_file` #4201](https://github.com/libgit2/libgit2/pull/4201)
  - [README: document our relation to changes in upstream #4198](https://github.com/libgit2/libgit2/pull/4198)
